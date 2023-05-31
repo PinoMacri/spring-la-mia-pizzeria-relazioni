@@ -20,6 +20,8 @@ import jakarta.validation.Valid;
 public class PizzaController {
 	@Autowired
 	private PizzaService pizzaService;
+	@Autowired
+	private OffertaService offertaService;
 
 	@GetMapping("/")
 	public String home(Model model) {
@@ -42,7 +44,9 @@ public class PizzaController {
 	@GetMapping("/pizze/{id}")
 	public String getPizza(Model model, @PathVariable("id") int id) {
 		Pizza pizza = getPizzaById(id);
+		Optional<Offerta> offerte = offertaService.getOfferteByPizzaId(id);
 		model.addAttribute("pizza", pizza);
+		model.addAttribute("offerte", offerte);
 		return "show";
 	}
 
@@ -136,6 +140,78 @@ public class PizzaController {
 		pizzaService.delete(pizza);
 		return "redirect:/pizze";
 	}
+
+	
+	  @GetMapping("/pizze/{pizzaId}/offerte/new")
+	    public String showNewOffertaForm(@PathVariable int pizzaId, Model model) {
+	        Optional<Pizza> pizzaOptional = pizzaService.findById(pizzaId);
+	        
+	        if (pizzaOptional.isPresent()) {
+	            Pizza pizza = pizzaOptional.get();
+	            Offerta offerta = new Offerta();
+	            model.addAttribute("pizza", pizza);
+	            model.addAttribute("offerta", offerta);
+	            return "create-offerta";
+	        } else {
+	        
+	            return "redirect:/pizze";
+	        }
+	    }
+
+	    @PostMapping("/pizze/{pizzaId}/offerte/new")
+	    public String createOfferta(@PathVariable int pizzaId, @ModelAttribute("offerta") Offerta offerta) {
+	        Optional<Pizza> pizzaOptional = pizzaService.findById(pizzaId);
+	        
+	        if (pizzaOptional.isPresent()) {
+	            Pizza pizza = pizzaOptional.get();
+	            offerta.setPizza(pizza);
+	            offertaService.save(offerta);
+	            return "redirect:/pizze/{pizzaId}";
+	        } else {
+
+	            return "redirect:/pizze";
+	        }
+	    }
+	    @GetMapping("/pizze/{pizzaId}/offerte/{offertaId}/edit")
+	    public String showEditOffertaForm(@PathVariable int pizzaId, @PathVariable int offertaId, Model model) {
+	        Optional<Offerta> offertaOptional = offertaService.findById(offertaId);
+	        if (offertaOptional.isPresent()) {
+	            Offerta offerta = offertaOptional.get();
+	            model.addAttribute("offerta", offerta);
+	        } else {
+	            throw new IllegalArgumentException("Offerta non trovata");
+	        }
+	        return "edit-offerta";
+	    }
+
+	    @PostMapping("/pizze/{pizzaId}/offerte/{offertaId}/edit")
+	    public String updateOfferta(@PathVariable int pizzaId, @PathVariable int offertaId, @ModelAttribute("offerta") Offerta offerta) {
+	        Optional<Pizza> pizzaOptional = pizzaService.findById(pizzaId);
+	        if (pizzaOptional.isPresent()) {
+	            Pizza pizza = pizzaOptional.get();
+	            
+	            Optional<Offerta> offertaOptional = offertaService.findById(offertaId);
+	            if (offertaOptional.isPresent()) {
+	                Offerta offertaPersistente = offertaOptional.get();
+
+	                offertaPersistente.setDataInizio(offerta.getDataInizio());
+	                offertaPersistente.setDataFine(offerta.getDataFine());
+	                offertaPersistente.setTitolo(offerta.getTitolo());
+	                offertaPersistente.setPercentualeSconto(offerta.getPercentualeSconto());
+	                offertaPersistente.setPizza(pizza);
+
+	                offertaService.save(offertaPersistente);
+	            } else {
+	                throw new IllegalArgumentException("Offerta non trovata");
+	            }
+	        } else {
+	            throw new IllegalArgumentException("Pizza non trovata");
+	        }
+	        return "redirect:/pizze/{pizzaId}";
+	    }
+
+
+
 
 	
 }

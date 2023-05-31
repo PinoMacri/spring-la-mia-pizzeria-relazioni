@@ -3,13 +3,17 @@ package com.example.demo;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class PizzaService {
 	@Autowired
 	private PizzaRepository pizzaRepository;
+
 
 	public List<Pizza> findAll() {
 		return pizzaRepository.findAll();
@@ -38,4 +42,6 @@ public class PizzaService {
 	public Optional<Pizza> findById(int id) {
 		return pizzaRepository.findById(id);
 	}
+	
+
 }

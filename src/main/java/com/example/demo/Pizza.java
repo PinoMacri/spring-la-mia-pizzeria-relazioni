@@ -1,9 +1,12 @@
 package com.example.demo;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -23,6 +26,9 @@ public class Pizza {
 	@Min(value=1, message="Inserisci un prezzo valido")
 	private Float prezzo;
 
+	@OneToMany(mappedBy="pizza")
+	private List <Offerta> offerte;
+	
 	public Pizza() {
 	}
 
@@ -72,11 +78,19 @@ public class Pizza {
 	public void setPrezzo(Float prezzo) {
 		this.prezzo = prezzo;
 	}
+	
+	public List <Offerta> getOfferte(){
+		return offerte;
+	}
+	
+	public void setOfferte(List<Offerta> offerte) {
+		this.offerte=offerte;
+	}
 
 	@Override
 	public String toString() {
-		return "Pizza [id=" + id + ", nome=" + nome + ", descrizione=" + descrizione + ", foto=" + foto + ", prezzo="
-				+ prezzo + "]";
+		return "Pizza [id=" + getId() + ", nome=" + getNome() + ", descrizione=" + getDescrizione() + ", foto=" + getFoto() + ", prezzo="
+				+ getPrezzo() + "]";
 	}
 
 }

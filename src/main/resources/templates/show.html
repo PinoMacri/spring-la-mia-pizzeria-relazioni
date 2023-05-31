@@ -8,9 +8,25 @@
 <title>Insert title here</title>
 </head>
 <body>
-<div th:object="${pizza}">
-<h1>[[*{id}]] - [[*{nome}]] - [[*{descrizione}]] - [[*{prezzo}]]</h1>
-<a href="/pizze">Torna alle pizze</a>
-</div>
+	<div th:object="${pizza}">
+		<h1>[[*{id}]] - [[*{nome}]] - [[*{descrizione}]] - [[*{prezzo}]]</h1>
+		<a href="/pizze">Torna alle pizze</a>
+		<h2>Offerte:</h2>
+		<div th:if="${pizza.offerte.empty}">
+			<p>Questa pizza non ha offerte.</p>
+		</div>
+		<ul th:if="${not pizza.offerte.empty}">
+			<li th:each="offerta : ${pizza.offerte}">
+				<p>Titolo: [[${offerta.titolo}]]</p>
+				<p>Data inizio: [[${offerta.dataInizio}]]</p>
+				<p>Data fine: [[${offerta.dataFine}]]</p>
+				<p>Percentuale sconto: [[${offerta.percentualeSconto}]]</p>
+				<a th:href="@{/pizze/{pizzaId}/offerte/{offertaId}/edit(pizzaId=${pizza.id}, offertaId=${offerta.id})}">Modifica Offerta</a>
+				
+			</li>
+		</ul>
+		<a href="/pizze/{pizzaId}/offerte/new" th:href="@{'/pizze/' + ${pizza.id} + '/offerte/new'}">Aggiungi Offerta</a>
+	</div>
 </body>
+
 </html>
