@@ -14,6 +14,8 @@ public class PizzeriaApplication implements CommandLineRunner {
     private PizzaService pizzaService;
     @Autowired
     private OffertaService offertaService;
+    @Autowired
+    private IngredienteService ingredienteService;
     
     public static void main(String[] args) {
         SpringApplication.run(PizzeriaApplication.class, args);
@@ -21,9 +23,16 @@ public class PizzeriaApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-    	  pizzaService.createAndSavePizza();
-          Pizza p1 = new Pizza("Pizza 1", "buona", "www.ciao.it", 13.99f);
-          Pizza p2 = new Pizza("Pizza 2", "buona", "www.ciao.it", 10.99f);
+         
+          
+        /*  Ingrediente i1 = new Ingrediente("pomodoro");
+          Ingrediente i2 = new Ingrediente ("mozzarella");
+          ingredienteService.save(i1);
+          ingredienteService.save(i2);
+          
+          pizzaService.createAndSavePizza();
+          Pizza p1 = new Pizza("Pizza 1", "buona", "www.ciao.it", 13.99f, i1, i2);
+          Pizza p2 = new Pizza("Pizza 2", "buona", "www.ciao.it", 10.99f, new Ingrediente[] {i2, i1});
           pizzaService.save(p1);
           pizzaService.save(p2);
           
@@ -34,6 +43,8 @@ public class PizzeriaApplication implements CommandLineRunner {
           offertaService.save(o1);
           offertaService.save(o2);
           offertaService.save(o3);
-          offertaService.save(o4);
-    }
+          offertaService.save(o4); 
+          */
+    } 
+
 }
